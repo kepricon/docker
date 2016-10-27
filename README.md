@@ -8,6 +8,16 @@ Below are the folders for:
 3. spark: a functional spark 1.6.2 installation that can be used for spark slave and master bundled with cuda connecting to hadoop.
 4. compose: a sample spark/hadoop cluster, for running gpus in compose use: https://github.com/eywalker/nvidia-docker-compose
 
+Versions:
+Spark 1.6.2
+Cuda 8
+Cudnn 5.0
+Hadoop 2.7.2
+Openblas current master
+Hadoop and spark compiled with java 8
+Spark/scala version: 2.11
+
+
 #Downloading
 ##Dl4j (WARNING THIS IS an 8GB download)
 ```
