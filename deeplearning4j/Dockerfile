@@ -59,7 +59,7 @@ RUN cd /opt/nd4j && ./buildmultiplescalaversions.sh clean install -DskipTests
 RUN rm -rf /opt/DataVec && git clone https://github.com/deeplearning4j/DataVec /opt/DataVec
 RUN cd /opt/DataVec  && chmod +x ./change-scala-versions.sh && ./buildmultiplescalaversions.sh  clean install -DskipTests
 
-RUN rm -rf /opt/deeplearning4j && git clone --depth 1 https://github.com/deeplearning4j/deeplearning4j /opt/deeplearning4j
+RUN rm -rf /opt/deeplearning4j && git clone  https://github.com/deeplearning4j/deeplearning4j /opt/deeplearning4j
 RUN cd /opt/deeplearning4j && chmod +x ./change-scala-versions.sh && cd /opt/deeplearning4j && ./buildmultiplescalaversions.sh -P !testresources clean install -DskipTests
 RUN git clone https://github.com/deeplearning4j/Arbiter /opt/Arbiter
 RUN cd /opt/Arbiter  && chmod +x ./change-scala-versions.sh && ./buildmultiplescalaversions.sh  clean install -DskipTests
