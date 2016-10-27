@@ -43,6 +43,12 @@ RUN tar xzvf jdk-8u91-linux-x64.tar.gz
 RUN mv jdk1.8.0_91 /opt
 ENV JAVA_HOME /opt/jdk1.8.0_91/
 
+#openblas for native cpu based jobs
+RUN yum -y groupinstall "Development Tools"
+ADD install_openblas.sh /opt/install_openblas.sh
+RUN chmod +x /opt/install_openblas.sh && /opt/install_openblas.sh
+
+
 # download native support
 RUN mkdir -p /tmp/native
 RUN curl -L https://github.com/sequenceiq/docker-hadoop-build/releases/download/v2.7.1/hadoop-native-64-2.7.1.tgz | tar -xz -C /tmp/native
