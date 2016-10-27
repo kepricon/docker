@@ -6,12 +6,12 @@ Below are the folders for:
 1. deeplearning4j: This is a folder for building deeplearning4j from source. 
 2. hadoop-docker: full blown hdfs and yarn bundled with cuda
 3. spark: a functional spark 1.6.2 installation that can be used for spark slave and master bundled with cuda connecting to hadoop.
-
+4. compose: a sample spark/hadoop cluster, for running gpus in compose use: https://github.com/eywalker/nvidia-docker-compose
 
 #Downloading
 ##Dl4j (WARNING THIS IS an 8GB download)
 ```
-docker pull skymindio-docker-dl4j-dev-environment.bintray.io/skymindio/dl4j-dev-environment.
+docker pull skymindio-docker-dl4j-dev-environment.bintray.io/skymindio/dl4j-dev-environment
 ```
 ##Spark
 ```
