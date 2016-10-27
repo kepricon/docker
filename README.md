@@ -8,3 +8,18 @@ Below are the folders for:
 3. spark: a functional spark 1.6.2 installation that can be used for spark slave and master bundled with cuda connecting to hadoop.
 
 
+#Downloading
+##Dl4j (WARNING THIS IS an 8GB download)
+```
+docker pull skymindio-docker-dl4j-dev-environment.bintray.io/skymindio/dl4j-dev-environment.
+```
+##Spark
+```
+docker pull skymindio-docker-dl4j-spark.bintray.io/skymindio/dl4j-spark
+```
+
+
+##Hadoop
+```
+docker pull skymindio-docker-dl4j-hadoop.bintray.io/skymindio/dl4j-hadoop
+```
