@@ -7,7 +7,7 @@ Below are the folders for:
 2. hadoop-docker: full blown hdfs and yarn bundled with cuda
 3. spark: a functional spark 1.6.2 installation that can be used for spark slave and master bundled with cuda connecting to hadoop.
 4. compose: a sample spark/hadoop cluster, for running gpus in compose use: https://github.com/eywalker/nvidia-docker-compose
-
+5. streamsets: this is for an ETL gui integrated with hadoop and spark.
 Versions:
 Spark 1.6.2
 Cuda 8
