@@ -4,7 +4,7 @@ Deeplearning4j development environment for hadoop and spark:
 Below are the folders for:
 
 1. deeplearning4j: This is a folder for building deeplearning4j from source. 
-2. hadoop-docker: full blown hdfs and yarn bundled with cuda
+2. hadoop-docker: full blown hdfs and yarn bundled with cuda. Make sure to mount a /data directory as a volume to hdfs. (see the hdfs-site.xml
 3. spark: a functional spark 1.6.2 installation that can be used for spark slave and master bundled with cuda connecting to hadoop.
 4. compose: a sample spark/hadoop cluster, for running gpus in compose use: https://github.com/eywalker/nvidia-docker-compose
 5. streamsets: this is for an ETL gui integrated with hadoop and spark.
