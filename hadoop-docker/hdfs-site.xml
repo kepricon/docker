@@ -7,6 +7,8 @@
         <name>hadoop.tmp.dir</name>
         <value>/data</value>
     </property>
+    <!-- http://stackoverflow.com/questions/2358402/where-hdfs-stores-files-locally-by-default -->
+
     <property>
         <name>dfs.data.dir</name>
         <value>/data</value>
