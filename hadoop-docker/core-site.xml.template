@@ -1,4 +1,8 @@
   <configuration>
+    <property>
+          <name>hadoop.tmp.dir</name>
+          <value>/data</value>
+      </property>
       <property>
           <name>fs.defaultFS</name>
           <value>hdfs://0.0.0.0:9000</value>
