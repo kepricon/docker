@@ -33,3 +33,8 @@ docker pull skymindio-docker-dl4j-spark.bintray.io/skymindio/dl4j-spark
 ```
 docker pull skymindio-docker-dl4j-hadoop.bintray.io/skymindio/dl4j-hadoop
 ```
+
+##Streamsets
+```
+docker pull skymindio-docker-datacollecor.bintray.io/skymindio/datacollector
+```
