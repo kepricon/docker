@@ -21,7 +21,7 @@ Spark/scala version: 2.11
 #Downloading
 ##Dl4j (WARNING THIS IS an 8GB download)
 ```
-docker pull skymindio-docker-dl4j-dev-environment.bintray.io/skymindio/dl4j-dev-environment
+docker pull skymindio-docker-dl4j-dev-environment.bintray.io/skymindio/dl4j-dev-environment:0.6.1-SNAPSHOT
 ```
 ##Spark
 ```
