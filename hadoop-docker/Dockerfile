@@ -118,6 +118,8 @@ RUN yum -y install initscripts
 ADD startssh.sh /opt/startssh.sh
 RUN chmod +x /opt/startssh.sh
 
+RUN mkdir -p /data
+
 # start sshd to generate host keys, patch sshd_config and enable yum repos
 RUN (/opt/startssh.sh; \
      sed -i 's/UsePAM yes/#UsePAM yes/g' /etc/ssh/sshd_config; \
@@ -136,7 +138,10 @@ RUN echo "root:rootroot" | chpasswd
 RUN /opt/startssh.sh && $HADOOP_PREFIX/etc/hadoop/hadoop-env.sh && $HADOOP_PREFIX/sbin/start-dfs.sh && $HADOOP_PREFIX/bin/hdfs dfs -mkdir -p /user/root
 RUN /opt/startssh.sh && $HADOOP_PREFIX/etc/hadoop/hadoop-env.sh && $HADOOP_PREFIX/sbin/start-dfs.sh && $HADOOP_PREFIX/bin/hdfs dfs -put $HADOOP_PREFIX/etc/hadoop/ input
 
+
+
 ADD runbootstrap.sh /opt/runbootstrap.sh
+
 
 #spark workers
 ADD hadoop-conf /opt/hadoop-conf
