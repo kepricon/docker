@@ -2,7 +2,7 @@ version: '2'
 
 services:
   namenode:
-    image: uhopper/hadoop-namenode
+    image: skymindio-docker-dl4j-hadoop.bintray.io/skymindio/dl4j-hadoop-namenode
     container_name: namenode
     hostname: namenode
     networks:
@@ -14,9 +14,10 @@ services:
       constraint:node=: onet1
     env_file:
       - ./hadoop.env
-
+    ports:
+      - "50070:50070"
   resourcemanager:
-    image: uhopper/hadoop-resourcemanager
+    image: skymindio-docker-dl4j-hadoop.bintray.io/skymindio/dl4j-hadoop-resourcemanager
     container_name: resourcemanager    
     hostname: resourcemanager
     depends_on:
@@ -29,7 +30,7 @@ services:
       - ./hadoop.env
 
   historyserver:
-    image: uhopper/hadoop-historyserver
+    image: skymindio-docker-dl4j-hadoop.bintray.io/skymindio/dl4j-hadoop-historyserver
     container_name: historyserver    
     hostname: historyserver
     depends_on:
@@ -44,7 +45,7 @@ services:
       - ./hadoop.env
 
   spark:
-    image: uhopper/hadoop-spark
+    image: skymindio-docker-dl4j-hadoop.bintray.io/skymindio/dl4j-hadoop-spark
     container_name: spark
     hostname: spark
     networks:
@@ -59,7 +60,7 @@ services:
     command: historyserver
 
   nodemanager1:
-    image: uhopper/hadoop-nodemanager
+    image: skymindio-docker-dl4j-hadoop.bintray.io/skymindio/dl4j-hadoop-nodemanager
     container_name: nodemanager1
     hostname: nodemanager1
     depends_on:
@@ -74,7 +75,7 @@ services:
       - ./hadoop.env
 
   nodemanager2:
-    image: uhopper/hadoop-nodemanager
+    image: skymindio-docker-dl4j-hadoop.bintray.io/skymindio/dl4j-hadoop-nodemanager
     container_name: nodemanager2
     hostname: nodemanager2
     depends_on:
@@ -89,7 +90,7 @@ services:
       - ./hadoop.env
       
   datanode1:
-    image: uhopper/hadoop-datanode
+    image: skymindio-docker-dl4j-hadoop.bintray.io/skymindio/dl4j-hadoop-datanode
     container_name: datanode1    
     hostname: datanode1
     depends_on:
@@ -104,7 +105,7 @@ services:
       - ./hadoop.env
 
   datanode2:
-    image: uhopper/hadoop-datanode
+    image: skymindio-docker-dl4j-hadoop.bintray.io/skymindio/dl4j-hadoop-datanode
     container_name: datanode2    
     hostname: datanode2
     depends_on:

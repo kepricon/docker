@@ -30,15 +30,19 @@ RUN yum -y groupinstall "Development Tools"
 ADD install_openblas.sh /opt/install_openblas.sh
 RUN chmod +x /opt/install_openblas.sh && /opt/install_openblas.sh
 
-
+RUN yum -y install wget
+RUN echo "SETTING UP JAVA"
+RUN wget --no-cookies --no-check-certificate --header "Cookie: gpw_e24=http%3A%2F%2Fwww.oracle.com%2F; oraclelicense=accept-securebackup-cookie" "http://download.oracle.com/otn-pub/java/jdk/8u91-b14/jdk-8u91-linux-x64.tar.gz"
+RUN tar xzvf jdk-8u91-linux-x64.tar.gz
+RUN mv jdk1.8.0_91 /opt
+ENV JAVA_HOME /opt/jdk1.8.0_91/
+ENV PATH $PATH:$JAVA_HOME/bin
 
 
 ENV HADOOP_VERSION 2.7.3
 ENV HADOOP_URL https://s3-us-west-2.amazonaws.com/skil-distro/hadoop-2.7.3.tar.gz
 RUN set -x \
     && curl -fSL "$HADOOP_URL" -o /tmp/hadoop.tar.gz \
-    && curl -fSL "$HADOOP_URL.asc" -o /tmp/hadoop.tar.gz.asc \
-    && gpg --verify /tmp/hadoop.tar.gz.asc \
     && tar -xvf /tmp/hadoop.tar.gz -C /opt/ \
     && rm /tmp/hadoop.tar.gz*
     

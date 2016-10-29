@@ -1,4 +1,4 @@
-FROM uhopper/hadoop:2.7.2
+FROM skymindio-docker-dl4j-hadoop.bintray.io/skymindio/dl4j-hadoop
 
 ADD run.sh /run.sh
 RUN chmod a+x /run.sh

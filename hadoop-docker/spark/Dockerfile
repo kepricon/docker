@@ -1,4 +1,4 @@
-FROM uhopper/hadoop:2.7.2
+FROM skymindio-docker-dl4j-hadoop.bintray.io/skymindio/dl4j-hadoop
 
 ENV SPARK_VERSION 1.6.2
 ENV SPARK_HADOOP_PROFILE 2.6

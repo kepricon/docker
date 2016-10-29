@@ -1,4 +1,4 @@
-FROM uhopper/hadoop:2.7.2
+FROM skymindio-docker-dl4j-hadoop.bintray.io/skymindio/dl4j-hadoop
 
 ENV HDFS_CONF_dfs_namenode_name_dir=file:///hadoop/dfs/name
 RUN mkdir -p /hadoop/dfs/name
