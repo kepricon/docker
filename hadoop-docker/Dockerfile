@@ -119,7 +119,7 @@ ADD startssh.sh /opt/startssh.sh
 RUN chmod +x /opt/startssh.sh
 
 RUN mkdir -p /data
-
+VOLUME /data
 # start sshd to generate host keys, patch sshd_config and enable yum repos
 RUN (/opt/startssh.sh; \
      sed -i 's/UsePAM yes/#UsePAM yes/g' /etc/ssh/sshd_config; \
