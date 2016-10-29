@@ -1,62 +1,244 @@
-#Apache Hadoop 2.7.1 Docker image
+# Hadoop Docker
 
-[![DockerPulls](https://img.shields.io/docker/pulls/sequenceiq/hadoop-docker.svg)](https://registry.hub.docker.com/u/sequenceiq/hadoop-docker/)
-[![DockerStars](https://img.shields.io/docker/stars/sequenceiq/hadoop-docker.svg)](https://registry.hub.docker.com/u/sequenceiq/hadoop-docker/)
+This repository contains *Dockerfile*s for setting up a basic Hadoop cluster.
+The available components are:
+
+1. *HDFS*:
+
+   * *namenode*
+   * *dtanode*
+   
+1. *YARN*:
+   
+   * *resourcemanager*
+   * *nodemanager*
+
+1. *Spark submitter*
+
+All images inherit from a base *hadoop* image which provides an hadoop
+installation in `/opt/` and provides a way to configure *hadoop* via
+environment variables. 
+
+## Hadoop configuration
+
+The *hadoop* configuration is controlled via the following environment
+variable groups:
+
+1. `CORE_CONF`: affects `/etc/hadoop/core-site.xml`
+1. `HDFS_CONF`: affects `/etc/hadoop/hdfs-site.xml`
+1. `YARN_CONF`: affects `/etc/hadoop/yarn-site.xml`
+1. `HTTPFS_CONF`: affects `/etc/hadoop/httpfs-site.xml`
+1. `KMS_CONF`: affects `/etc/hadoop/KMS-site.xml` 
+
+*Hadoop* properties by setting an environment variable with the
+appropriated prefix in the form `<PREFIX>_<PROPERTY>`.
+
+Due to restriction imposed by `docker` and `docker-compose` on
+environment variable names the following substitution are applied to
+property names:
+
+* `_` => `.`
+* `__` => `_`
+* `___` => `-`
+
+Following are some illustratory examples:
+
+* `CORE_CONF_fs_defaultFS`: sets the *fs.defaultFS* property in
+`core-site.xml`
+* `YARN_CONF_yarn_log___aggregation___enable`: sets the
+  *yarn.log-aggregation-enable* property in `yarn-site.xml`
 
 
 
-_Note: this is the master branch - for a particular Hadoop version always check the related branch_
+## Hadoop configuration presets
 
-A few weeks ago we released an Apache Hadoop 2.3 Docker image - this quickly become the most [popular](https://registry.hub.docker.com/search?q=hadoop&s=downloads) Hadoop image in the Docker [registry](https://registry.hub.docker.com/).
+Furthermore the following special environment variables control
+configurations presets:
 
+* `MULTIHOMED_NETWORK`: configure the *hadoop* cluster in such a way
+  to be reachable from multiple networks, specifically the following
+  properties are set:
 
-Following the success of our previous Hadoop Docker [images](https://registry.hub.docker.com/u/sequenceiq/hadoop-docker/), the feedback and feature requests we received aligned with the Hadoop release cycle, so we have released an Apache Hadoop 2.7.1 Docker image - same as the previous version, it's available as a trusted and automated build on the official Docker [registry](https://registry.hub.docker.com/).
+    In `/etc/hadoop/hdfs-site.xml`:
 
+    * dfs.namenode.rpc-bind-host = 0.0.0.0
+    * dfs.namenode.servicerpc-bind-host = 0.0.0.0
+    * dfs.namenode.http-bind-host = 0.0.0.0
+    * dfs.namenode.https-bind-host = 0.0.0.0
+    * dfs.client.use.datanode.hostname = true
+    * dfs.datanode.use.datanode.hostname = true
 
-_FYI: All the former Hadoop releases (2.3, 2.4.0, 2.4.1, 2.5.0, 2.5.1, 2.5.2, 2.6.0) are available in the GitHub branches or our [Docker Registry](https://registry.hub.docker.com/u/sequenceiq/hadoop-docker/) - check the tags._
+    In `/etc/hadoop/yarn-site.xml`:
 
-# Build the image
+    * yarn.resourcemanager.bind-host = 0.0.0.0
+    * yarn.nodemanager.bind-host = 0.0.0.0
+    * yarn.nodemanager.bind-host = 0.0.0.0
 
-If you'd like to try directly from the Dockerfile you can build the image as:
+    In `/etc/hadoop/mapred-site.xml`:
 
-```
-docker build  -t sequenceiq/hadoop-docker:2.7.1 .
-```
-# Pull the image
+    * yarn.nodemanager.bind-host = 0.0.0.0
 
-The image is also released as an official Docker image from Docker's automated build repository - you can always pull or refer the image when launching containers.
+* `GANGLIA_HOST`: instruct *hadoop* to send metrics to the specified
+  *ganglia gmond* daemon (requires a unicast ganglia configuration) 
 
-```
-docker pull sequenceiq/hadoop-docker:2.7.1
-```
+## Networking
 
-# Start a container
+In order for things to run smoothly it's reccomended to exploit the
+new networking infrastructure of *docker* 1.9. Create a dedicated
+*network* for the cluster to run on.
 
-In order to use the Docker image you have just build or pulled use:
+Furthermore is useful to fix the container *name* and the container
+*hostname* to the same value. This way every container will able to
+resolve itself with the same name as other container.
 
-**Make sure that SELinux is disabled on the host. If you are using boot2docker you don't need to do anything.**
+Lastly is useful to set the *domainname* equal to the name of the
+*network* and use *FQDN* to reference the various services.
 
-```
-docker run -it sequenceiq/hadoop-docker:2.7.1 /etc/bootstrap.sh -bash
-```
+With the specified setup is possible you'll be able to access the
+web-interfaces of the various components without the annoying problem
+of unresolved links (provided that you setup a dns solution to resolve
+container names and configure static routing if using
+*docker-machine*).
 
-## Testing
+## Components
 
-You can run one of the stock examples:
+### namenode
 
-```
-cd $HADOOP_PREFIX
-# run the mapreduce
-bin/hadoop jar share/hadoop/mapreduce/hadoop-mapreduce-examples-2.7.1.jar grep input output 'dfs[a-z.]+'
+The *hadoop-namenode* image starts an Hadoop NameNode. (single instance)
 
-# check the output
-bin/hdfs dfs -cat output/*
-```
+Additional environment variables:
 
-## Hadoop native libraries, build, Bintray, etc
+* `CLUSTER_NAME`: name of the *HDFS* cluster (used during the initial
+formatting)
 
-The Hadoop build process is no easy task - requires lots of libraries and their right version, protobuf, etc and takes some time - we have simplified all these, made the build and released a 64b version of Hadoop nativelibs on this [Bintray repo](https://bintray.com/sequenceiq/sequenceiq-bin/hadoop-native-64bit/2.7.0/view/files). Enjoy.
+Volumes:
 
-## Automate everything
+* `/hadoop/dfs/name`: *HDFS* filesystem name directory
 
-As we have mentioned previously, a Docker file was created and released in the official [Docker repository](https://registry.hub.docker.com/u/sequenceiq/hadoop-docker/)
+Mandatory configuration:
+
+* `CLUSTER_NAME`: cluster name
+
+*Docker-compose* template:
+
+    namenode:
+      image: uhopper/hadoop-namenode
+      hostname: namenode
+      container_name: namenode
+      domainname: hadoop
+      net: hadoop
+      volumes:
+        - <NAMENODE-VOLUME>:/hadoop/dfs/name
+      environment:
+        - GANGLIA_HOST=<GMOND-RECEIVER-HOST>
+        - CLUSTER_NAME=<CLUSTER-NAME>
+
+Once running you can connect to `http://<CONTAINER_IP>:50070` to see
+the webui.
+
+### datanode
+
+The *hadoop-datanode* image starts an Hadoop DataNode. (multiple instances)
+
+Volumes:
+
+* `/hadoop/dfs/data`: *HDFS* filesystem data directory
+
+Mandatory configuration:
+
+* `CORE_CONF_fs_defaultFS`: *HDFS* address (i.e. `hdfs://<NAMENODE-HOST>:8020`)
+
+*Docker-compose* template:
+
+    datanode1:
+      image: uhopper/hadoop-datanode
+      hostname: datanode1
+      container_name: datanode1
+      domainname: hadoop
+      net: hadoop
+      volumes:
+        - <DATANODE-VOLUME>:/hadoop/dfs/data
+      environment:
+        - GANGLIA_HOST=<GMOND-RECEIVER-HOST>
+        - CORE_CONF_fs_defaultFS=hdfs://<NAMENODE-HOST>:8020
+
+### resourcemanager
+
+The *hadoop-resourcemanager* image starts an Hadoop
+ResourceManager. (single instance)
+
+Mandatory configuration:
+
+* `CORE_CONF_fs_defaultFS`: *HDFS* address (i.e. `hdfs://<NAMENODE-HOST>:8020`)
+
+*Docker-compose* template:
+
+    resourcemanager:
+      image: uhopper/hadoop-resourcemanager
+      hostname: resourcemanager
+      container_name: resourcemanager
+      domainname: hadoop
+      net: hadoop
+      environment:
+        - GANGLIA_HOST=<GMOND-RECEIVER-HOST>
+        - CORE_CONF_fs_defaultFS=hdfs://<NAMENODE-HOST>:8020
+        - YARN_CONF_yarn_log___aggregation___enable=true
+
+Once running you can connect to `http://<CONTAINER_IP>:8088` to see
+the webui.
+
+### nodemanager
+
+The *hadoop-nodemanager* image starts an Hadoop NodeManager. (multiple
+instances) 
+
+Mandatory configuration:
+
+* `CORE_CONF_fs_defaultFS`: *HDFS* address (i.e. `hdfs://<NAMENODE-HOST>:8020`)
+* `YARN_CONF_yarn_resourcemanager_hostname`: *resourcemanager* host
+
+*Docker-compose* template:
+
+    nodemanager1:
+      image: uhopper/hadoop-nodemanager
+      hostname: nodemanager1
+      container_name: nodemanager1
+      domainname: hadoop
+      net: hadoop
+      environment:
+        - GANGLIA_HOST=<GMOND-RECEIVER-HOST>
+        - CORE_CONF_fs_defaultFS=hdfs://<NAMENODE-HOST>:8020
+        - YARN_CONF_yarn_resourcemanager_hostname=<RESOURCEMANAGER-HOST>
+        - YARN_CONF_yarn_log___aggregation___enable=true
+        - YARN_CONF_yarn_nodemanager_remote___app___log___dir=/app-logs
+
+### spark
+
+The *hadoop-spark* image is an utility container which provides a
+Spark environment configured for the *hadoop* cluster.
+
+The image itself doesn't specify any command since no service are
+exposed. You are expected to specify it yourself via `docker run
+uhopper/hadoop-spark <command>`.
+
+A common approach is to keep the container alive using `tail -f
+/var/log/dmesg` as command and then connect to it via `docker exec -ti
+spark bash` to have a *spark* environment.
+
+Mandatory configuration:
+
+* `CORE_CONF_fs_defaultFS`: *HDFS* address (i.e. `hdfs://<NAMENODE-HOST>:8020`)
+* `YARN_CONF_yarn_resourcemanager_hostname`: *resourcemanager* host
+
+*Docker-compose* template:
+
+    spark:
+      image: uhopper/hadoop-spark
+      hostname: spark
+      container_name: spark
+      domainname: hadoop
+      net: hadoop
+      environment:
+        - CORE_CONF_fs_defaultFS=hdfs://namenode:8020
+        - YARN_CONF_yarn_resourcemanager_hostname=resourcemanager
+      command: tail -f /var/log/dmesg

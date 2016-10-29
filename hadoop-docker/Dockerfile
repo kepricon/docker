@@ -43,7 +43,7 @@ RUN wget --no-cookies --no-check-certificate --header "Cookie: gpw_e24=http%3A%2
 RUN tar xzvf jdk-8u91-linux-x64.tar.gz
 RUN mv jdk1.8.0_91 /opt
 ENV JAVA_HOME /opt/jdk1.8.0_91/
-
+ENV PATH $PATH:$JAVA_HOME/bin
 #openblas for native cpu based jobs
 RUN yum -y groupinstall "Development Tools"
 ADD install_openblas.sh /opt/install_openblas.sh
@@ -119,7 +119,7 @@ ADD startssh.sh /opt/startssh.sh
 RUN chmod +x /opt/startssh.sh
 
 RUN mkdir -p /data
-
+VOLUME /data
 # start sshd to generate host keys, patch sshd_config and enable yum repos
 RUN (/opt/startssh.sh; \
      sed -i 's/UsePAM yes/#UsePAM yes/g' /etc/ssh/sshd_config; \
