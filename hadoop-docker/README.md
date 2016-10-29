@@ -1,5 +1,5 @@
 # Hadoop Docker
-
+Adapted from: https://bitbucket.org/uhopper/hadoop-docker/overview 
 This repository contains *Dockerfile*s for setting up a basic Hadoop cluster.
 The available components are:
 
