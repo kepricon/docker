@@ -1,4 +1,4 @@
-FROM nvidia/cuda:8.0-cudnn5-runtime-centos7
+FROM nvidia/cuda:8.0-cudnn5-devel-centos7
 MAINTAINER Skymind Inc <help@skymind.io>
 
 
